@@ -1,11 +1,12 @@
 # app/routes.py
+from datetime import datetime
 from fastapi import APIRouter
 from app.models.schema import GeneratePaperRequest, GeneratePaperResponse
 import itertools
 from app.services.knowledge_base import get_subjects, get_topics
 from app.services.knowledge_base import load_topic_knowledge
-
-
+from app.utils.document_generator import save_question_paper_as_pdf, save_question_paper_as_word
+from fastapi.responses import FileResponse
 from app.utils.caching import is_duplicate_question, add_to_question_pool, clear_question_pool
 from app.utils.caching import clear_all_cached_questions
 from app.services.generator import generate_question
@@ -40,26 +41,30 @@ def generate_paper(request: GeneratePaperRequest):
         for _ in range(count):
             topic = next(topic_cycle)
             question_type = next(type_cycle)
+            question_text = generate_question(topic=topic, difficulty=difficulty_level, question_type=question_type)
 
-            # Check Redis cache
-            question_text = get_cached_question(topic, difficulty_level, question_type)
-            kb_data = load_topic_knowledge(request.subject, request.grade, topic)
-            if not question_text:
-                retry = 0
-                question_text = generate_question(topic=topic, difficulty=difficulty_level, question_type=question_type,kb_data=kb_data)
-
-                while is_duplicate_question(user_id, question_text) and retry < 3:
-                    question_text = generate_question(topic=topic, difficulty=difficulty_level, question_type=question_type,kb_data=kb_data)
-                    retry += 1
-
-                # Save to Redis cache
-                cache_question(topic, difficulty_level, question_type, question_text)
+            retry = 0
+            while is_duplicate_question(user_id, question_text) and retry < 3:
+                question_text = generate_question(topic=topic, difficulty=difficulty_level, question_type=question_type)
+                retry += 1
 
             add_to_question_pool(user_id, question_text)
             paper[f"Question {question_number}"] = question_text
             question_number += 1
 
-    return GeneratePaperResponse(paper=paper)
+    # Save to file
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    word_file = save_question_paper_as_word(paper, f"question_paper_{timestamp}.docx")
+    pdf_file = save_question_paper_as_pdf(paper, f"question_paper_{timestamp}.pdf")
+
+    return {
+        "paper": paper,
+        "download_links": {
+            "pdf": f"/download/pdf/{timestamp}",
+            "word": f"/download/word/{timestamp}"
+        }
+    }
+
 
 
 @router.get("/subjects")
@@ -77,3 +82,15 @@ def fetch_topics(subject: str, grade: str):
 def clear_cache_endpoint():
     clear_all_cached_questions()
     return {"message": "All cached questions cleared."}
+
+
+@router.get("/download/pdf/{timestamp}")
+def download_pdf(timestamp: str):
+    path = f"generated_papers/question_paper_{timestamp}.pdf"
+    return FileResponse(path, media_type='application/pdf', filename=f"question_paper_{timestamp}.pdf")
+
+
+@router.get("/download/word/{timestamp}")
+def download_word(timestamp: str):
+    path = f"generated_papers/question_paper_{timestamp}.docx"
+    return FileResponse(path, media_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document', filename=f"question_paper_{timestamp}.docx")

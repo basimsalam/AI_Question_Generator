@@ -23,3 +23,4 @@ class GeneratePaperRequest(BaseModel):
 # 📤 Response schema for generated paper
 class GeneratePaperResponse(BaseModel):
     paper: dict
+    download_links: Dict[str, str]
