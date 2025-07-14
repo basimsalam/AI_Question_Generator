@@ -2,6 +2,8 @@
 from datetime import datetime
 from fastapi import APIRouter
 from app.models.schema import GeneratePaperRequest, GeneratePaperResponse
+from app.utils.response import success_response, error_response
+
 import itertools
 from app.services.knowledge_base import get_subjects, get_topics
 from app.services.knowledge_base import load_topic_knowledge
@@ -13,9 +15,7 @@ from app.services.generator import generate_question
 from app.utils.caching import (
     is_duplicate_question,
     add_to_question_pool,
-    clear_question_pool,
-    get_cached_question,
-    cache_question
+    clear_question_pool
 )
 
 
@@ -41,7 +41,9 @@ def generate_paper(request: GeneratePaperRequest):
         for _ in range(count):
             topic = next(topic_cycle)
             question_type = next(type_cycle)
-            question_text = generate_question(topic=topic, difficulty=difficulty_level, question_type=question_type)
+            knowledge = load_topic_knowledge(request.subject, request.grade, topic)
+
+            question_text = generate_question(topic=topic, difficulty=difficulty_level, question_type=question_type,kb_data=knowledge)
 
             retry = 0
             while is_duplicate_question(user_id, question_text) and retry < 3:
@@ -57,13 +59,18 @@ def generate_paper(request: GeneratePaperRequest):
     word_file = save_question_paper_as_word(paper, f"question_paper_{timestamp}.docx")
     pdf_file = save_question_paper_as_pdf(paper, f"question_paper_{timestamp}.pdf")
 
-    return {
+    
+    return success_response(
+    body={
         "paper": paper,
         "download_links": {
             "pdf": f"/download/pdf/{timestamp}",
             "word": f"/download/word/{timestamp}"
         }
-    }
+    },
+    message="Question paper generated successfully"
+)
+    
 
 
 
