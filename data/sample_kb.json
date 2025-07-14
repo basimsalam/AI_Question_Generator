@@ -1,0 +1,122 @@
+{
+  "Math": {
+    "Grade 10": {
+      "Algebra": {
+        "topics": [
+          "Linear Equations",
+          "Quadratic Equations",
+          "Polynomials",
+          "Arithmetic Progression",
+          "Factorization",
+          "Inequalities",
+          "Simultaneous Equations",
+          "Algebraic Identities"
+        ],
+        "objectives": ["Understanding", "Application", "Problem Solving"]
+      },
+      "Geometry": {
+        "topics": [
+          "Triangles",
+          "Circles",
+          "Coordinate Geometry",
+          "Constructions",
+          "Lines and Angles",
+          "Quadrilaterals",
+          "Proof of Theorems"
+        ],
+        "objectives": ["Diagram Interpretation", "Theorem Proofs", "Spatial Reasoning"]
+      },
+      "Mensuration": {
+        "topics": [
+          "Surface Area",
+          "Volume of Solids",
+          "Spheres and Hemispheres",
+          "Frustums",
+          "Areas of Composite Figures",
+          "Trapeziums",
+          "Cylinders"
+        ],
+        "objectives": ["Calculation", "Formula Application", "Estimation"]
+      }
+    }
+  },
+  "Biology": {
+    "Grade 10": {
+      "Life Processes": {
+        "topics": [
+          "Nutrition in Plants",
+          "Nutrition in Animals",
+          "Photosynthesis",
+          "Respiration",
+          "Excretion",
+          "Transportation",
+          "Enzymes"
+        ],
+        "objectives": ["Conceptual Understanding", "Diagram Based Questions", "Labeling"]
+      },
+      "Genetics": {
+        "topics": [
+          "Heredity",
+          "Mendel’s Experiments",
+          "Sex Determination",
+          "DNA Structure",
+          "Traits and Inheritance",
+          "Variation"
+        ],
+        "objectives": ["Understanding", "Inference", "Short Answer"]
+      },
+      "Human Health": {
+        "topics": [
+          "Control and Coordination",
+          "Nervous System",
+          "Endocrine System",
+          "Hormones",
+          "Reflex Actions",
+          "Diseases and Prevention"
+        ],
+        "objectives": ["Explanation", "Diagram-based", "Short Notes"]
+      }
+    }
+  },
+  "English": {
+    "Grade 10": {
+      "Grammar": {
+        "topics": [
+          "Tenses",
+          "Prepositions",
+          "Articles",
+          "Voice Change",
+          "Speech Change",
+          "Subject-Verb Agreement",
+          "Modals",
+          "Conjunctions"
+        ],
+        "objectives": ["Correction", "Usage", "Identification"]
+      },
+      "Literature": {
+        "topics": [
+          "Prose Comprehension",
+          "Poetry Interpretation",
+          "Character Sketches",
+          "Theme Analysis",
+          "Dialogue Interpretation",
+          "Poetic Devices"
+        ],
+        "objectives": ["Analysis", "Explanation", "Theme Recognition"]
+      },
+      "Writing Skills": {
+        "topics": [
+          "Formal Letter",
+          "Informal Letter",
+          "Story Writing",
+          "Essay Writing",
+          "Report Writing",
+          "Article Writing",
+          "Diary Entry",
+          "Speech Writing"
+        ],
+        "objectives": ["Structure", "Creativity", "Vocabulary Usage"]
+      }
+    }
+  }
+}
