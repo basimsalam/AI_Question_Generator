@@ -31,6 +31,11 @@ def read_root():
 def generate_paper(request: GeneratePaperRequest):
     user_id = "demo_user"
     paper = {}
+    
+    if not request.topics:
+        return error_response(message="No topics provided", status_code=400)
+    if not request.question_types:
+        return error_response(message="No question types provided", status_code=400)
     clear_question_pool(user_id)
 
     topic_cycle = itertools.cycle(request.topics)
